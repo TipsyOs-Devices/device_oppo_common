@@ -125,11 +125,13 @@ public class KeyHandler implements DeviceKeyHandler {
                 action = getGestureSharedPreferences()
                         .getString(ScreenOffGesture.PREF_GESTURE_CIRCLE,
                         ActionConstants.ACTION_CAMERA);
+                        doHapticFeedback();
                 break;
             case GESTURE_SWIPE_DOWN_SCANCODE:
                 action = getGestureSharedPreferences()
                         .getString(ScreenOffGesture.PREF_GESTURE_DOUBLE_SWIPE,
                         ActionConstants.ACTION_MEDIA_PLAY_PAUSE);
+                        doHapticFeedback();
                 break;
             case GESTURE_V_SCANCODE:
                 action = getGestureSharedPreferences()
@@ -140,21 +142,25 @@ public class KeyHandler implements DeviceKeyHandler {
                 action = getGestureSharedPreferences()
                         .getString(ScreenOffGesture.PREF_GESTURE_ARROW_UP,
                         ActionConstants.ACTION_TORCH);
+                        doHapticFeedback();
                 break;
             case GESTURE_LTR_SCANCODE:
                 action = getGestureSharedPreferences()
                         .getString(ScreenOffGesture.PREF_GESTURE_ARROW_LEFT,
                         ActionConstants.ACTION_MEDIA_PREVIOUS);
+                        doHapticFeedback();
                 break;
             case GESTURE_GTR_SCANCODE:
                 action = getGestureSharedPreferences()
                         .getString(ScreenOffGesture.PREF_GESTURE_ARROW_RIGHT,
                         ActionConstants.ACTION_MEDIA_NEXT);
+                        doHapticFeedback();
                 break;
             case KEY_DOUBLE_TAP:
                 action = getGestureSharedPreferences()
                         .getString(ScreenOffGesture.PREF_GESTURE_DOUBLE_TAP,
                         ActionConstants.ACTION_WAKE_DEVICE);
+                        doHapticFeedback();
                 break;
             case MODE_TOTAL_SILENCE:
                 setZenMode(Settings.Global.ZEN_MODE_NO_INTERRUPTIONS);
@@ -192,6 +198,13 @@ public class KeyHandler implements DeviceKeyHandler {
         if (mVibrator != null) {
             mVibrator.vibrate(50);
         }
+    }
+
+    private void doHapticFeedback() {
+        if (mVibrator == null) {
+            return;
+        }
+            mVibrator.vibrate(50);
     }
 
     private SharedPreferences getGestureSharedPreferences() {
