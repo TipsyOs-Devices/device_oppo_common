@@ -37,10 +37,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.android.internal.util.slim.AppHelper;
-import com.android.internal.util.slim.ActionConstants;
-import com.android.internal.util.slim.DeviceUtils;
-import com.android.internal.util.slim.DeviceUtils.FilteredDeviceFeaturesArray;
+import org.slim.action.ActionConstants;
+import org.slim.utils.AppHelper;
+import org.slim.utils.DeviceUtils;
+import org.slim.utils.DeviceUtils.FilteredDeviceFeaturesArray;
 
 import com.slim.device.KernelControl;
 import com.slim.device.R;
@@ -50,7 +50,7 @@ public class ScreenOffGesture extends PreferenceFragment implements
         OnPreferenceChangeListener, OnPreferenceClickListener,
         ShortcutPickerHelper.OnPickListener {
 
-    private static final String SETTINGS_METADATA_NAME = "com.android.settings";
+    private static final String SLIM_METADATA_NAME = "org.slim.framework";
 
     public static final String GESTURE_SETTINGS = "screen_off_gesture_settings";
 
@@ -96,19 +96,19 @@ public class ScreenOffGesture extends PreferenceFragment implements
         // Before we start filter out unsupported options on the
         // ListPreference values and entries
         PackageManager pm = getActivity().getPackageManager();
-        Resources settingsResources = null;
+        Resources slimResources = null;
         try {
-            settingsResources = pm.getResourcesForApplication(SETTINGS_METADATA_NAME);
+            slimResources = pm.getResourcesForApplication(SLIM_METADATA_NAME);
         } catch (Exception e) {
             return;
         }
         sFinalActionDialogArray = new FilteredDeviceFeaturesArray();
         sFinalActionDialogArray = DeviceUtils.filterUnsupportedDeviceFeatures(getActivity(),
-                settingsResources.getStringArray(
-                        settingsResources.getIdentifier(SETTINGS_METADATA_NAME
+                slimResources.getStringArray(
+                        slimResources.getIdentifier(SLIM_METADATA_NAME
                         + ":array/shortcut_action_screen_off_values", null, null)),
-                settingsResources.getStringArray(
-                        settingsResources.getIdentifier(SETTINGS_METADATA_NAME
+                slimResources.getStringArray(
+                        slimResources.getIdentifier(SLIM_METADATA_NAME
                         + ":array/shortcut_action_screen_off_entries", null, null)));
 
         // Attach final settings screen.
