@@ -37,10 +37,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.slim.action.ActionsArray;
 import org.slim.action.ActionConstants;
 import org.slim.utils.AppHelper;
-import org.slim.utils.DeviceUtils;
-import org.slim.utils.DeviceUtils.FilteredDeviceFeaturesArray;
 
 import com.slim.device.KernelControl;
 import com.slim.device.R;
@@ -85,7 +84,7 @@ public class ScreenOffGesture extends PreferenceFragment implements
 
     private ShortcutPickerHelper mPicker;
     private String mPendingSettingsKey;
-    private static FilteredDeviceFeaturesArray sFinalActionDialogArray;
+    private ActionsArray mActionsArray;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,23 +95,7 @@ public class ScreenOffGesture extends PreferenceFragment implements
         mScreenOffGestureSharedPreferences = getActivity().getSharedPreferences(
                 GESTURE_SETTINGS, Activity.MODE_PRIVATE);
 
-        // Before we start filter out unsupported options on the
-        // ListPreference values and entries
-        PackageManager pm = getActivity().getPackageManager();
-        Resources slimResources = null;
-        try {
-            slimResources = pm.getResourcesForApplication(SLIM_METADATA_NAME);
-        } catch (Exception e) {
-            return;
-        }
-        sFinalActionDialogArray = new FilteredDeviceFeaturesArray();
-        sFinalActionDialogArray = DeviceUtils.filterUnsupportedDeviceFeatures(getActivity(),
-                slimResources.getStringArray(
-                        slimResources.getIdentifier(SLIM_METADATA_NAME
-                        + ":array/shortcut_action_screen_off_values", null, null)),
-                slimResources.getStringArray(
-                        slimResources.getIdentifier(SLIM_METADATA_NAME
-                        + ":array/shortcut_action_screen_off_entries", null, null)));
+        mActionsArray = new ActionsArray(getActivity(), true);
 
         // Attach final settings screen.
         reloadSettings();
@@ -189,13 +172,13 @@ public class ScreenOffGesture extends PreferenceFragment implements
     }
 
     private String getDescription(String action) {
-        if (sFinalActionDialogArray == null || action == null) {
+        if (mActionsArray == null || action == null) {
             return null;
         }
         int i = 0;
-        for (String actionValue : sFinalActionDialogArray.values) {
+        for (String actionValue : mActionsArray.getValues()) {
             if (action.equals(actionValue)) {
-                return sFinalActionDialogArray.entries[i];
+                return mActionsArray.getEntries()[i];
             }
             i++;
         }
@@ -346,16 +329,16 @@ public class ScreenOffGesture extends PreferenceFragment implements
             int dialogTitle = getArguments().getInt("dialogTitle");
             switch (id) {
                 case DLG_SHOW_ACTION_DIALOG:
-                    if (sFinalActionDialogArray == null) {
+                    if (getOwner().mActionsArray == null) {
                         return null;
                     }
                     return new AlertDialog.Builder(getActivity())
                     .setTitle(dialogTitle)
                     .setNegativeButton(R.string.cancel, null)
-                    .setItems(getOwner().sFinalActionDialogArray.entries,
+                    .setItems(getOwner().mActionsArray.getEntries(),
                         new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int item) {
-                            if (getOwner().sFinalActionDialogArray.values[item]
+                            if (getOwner().mActionsArray.getValues()[item]
                                     .equals(ActionConstants.ACTION_APP)) {
                                 if (getOwner().mPicker != null) {
                                     getOwner().mPendingSettingsKey = settingsKey;
@@ -364,7 +347,7 @@ public class ScreenOffGesture extends PreferenceFragment implements
                             } else {
                                 getOwner().mScreenOffGestureSharedPreferences.edit()
                                         .putString(settingsKey,
-                                        getOwner().sFinalActionDialogArray.values[item]).commit();
+                                        getOwner().mActionsArray.getValues()[item]).commit();
                                 getOwner().reloadSettings();
                             }
                         }
