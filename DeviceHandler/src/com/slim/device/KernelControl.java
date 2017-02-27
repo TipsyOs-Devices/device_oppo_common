@@ -32,10 +32,12 @@ import java.io.File;
 public final class KernelControl {
 
     private static String GESTURE_PATH = "/proc/touchpanel/";
-    private static String GESTURE_CAMERA           = GESTURE_PATH + "letter_o_enable";
-    private static String GESTURE_FLASHLIGHT       = GESTURE_PATH + "up_arrow_enable";
-    private static String GESTURE_MUSIC            = GESTURE_PATH + "double_swipe_enable";
-    private static String GESTURE_SILENT_VIB_SOUND = GESTURE_PATH + "down_arrow_enable";
+    private static String GESTURE_CAMERA			= GESTURE_PATH + "letter_o_enable";
+    private static String GESTURE_FLASHLIGHT		= GESTURE_PATH + "up_arrow_enable";
+    private static String GESTURE_MUSIC			= GESTURE_PATH + "double_swipe_enable";
+    private static String GESTURE_MUSIC_PREVIOUS	= GESTURE_PATH + "right_arrow_enable";
+    private static String GESTURE_MUSIC_NEXT		= GESTURE_PATH + "left_arrow_enable";
+    private static String GESTURE_SILENT_VIB_SOUND	= GESTURE_PATH + "down_arrow_enable";
 
     // Notification slider
     public static final String SLIDER_SWAP_NODE = "/proc/s1302/key_rep";
@@ -47,6 +49,8 @@ public final class KernelControl {
             GESTURE_CAMERA,
             GESTURE_FLASHLIGHT ,
             GESTURE_MUSIC,
+            GESTURE_MUSIC_PREVIOUS,
+            GESTURE_MUSIC_NEXT,
             GESTURE_SILENT_VIB_SOUND
     };
 
