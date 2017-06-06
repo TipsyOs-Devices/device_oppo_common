@@ -36,7 +36,12 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+            // Disable touchscreen gesture settings if needed
+            if (!KernelControl.hasTouchscreenGestures()) {
+                disableComponent(context, ScreenOffGesture.class.getName());
+            } else {
                 enableComponent(context, ScreenOffGesture.class.getName());
+
                 SharedPreferences screenOffGestureSharedPreferences = context.getSharedPreferences(
                         ScreenOffGesture.GESTURE_SETTINGS, Activity.MODE_PRIVATE);
                 KernelControl.enableGestures(
@@ -60,6 +65,7 @@ public class BootReceiver extends BroadcastReceiver {
                 FileUtils.writeLine(KernelControl.KEYCODE_SLIDER_BOTTOM, sliderBottom);
                 FileUtils.writeLine(KernelControl.SLIDER_SWAP_NODE, sliderSwap ? "1" : "0");
             }
+        }
     }
 
     private String getPreferenceString(Context context, String key, String defaultValue) {
